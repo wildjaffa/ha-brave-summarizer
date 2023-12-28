@@ -1,0 +1,33 @@
+template:
+  - trigger:
+      - platform: time_pattern
+        # This will update every night
+        hours: 0
+        minutes: 0
+    sensor:
+      - name: "Question Asked"
+        unique_id: "question_asked"
+        state: "Nothing asked today"
+      - name: "Summary"
+        unique_id: "answer_summary"
+        state: "Nothing asked today"
+      - name: "Answer Sources"
+        unique_id: "answer_sources"
+        state: "Nothing asked today"
+
+python_script:
+
+brave_summarizer:
+  fields:
+    question:
+      required: true
+      example: "can dogs eat apples"
+
+intent_script:
+  AskQuestion:
+    action:
+      service: "script.ask_question"
+      data:
+        question: "{{question_type}} {{ question }}"
+    speech:
+      text: "According to {{states('sensor.answer_sources')}}, {{ states('sensor.summary') }}"

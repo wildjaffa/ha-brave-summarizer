@@ -1,0 +1,18 @@
+language: "en"
+intents:
+  AskQuestion:
+    data:
+      - sentences:
+          - "{question_type} {question}"
+
+lists:
+  question:
+    wildcard: true
+  question_type:
+    values:
+      - "can"
+      - "who"
+      - "what"
+      - "where"
+      - "why"
+      - "how"

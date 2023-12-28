@@ -1,0 +1,30 @@
+ask_question:
+  alias: Ask question
+  fields:
+    question:
+      description: The Question you want to ask
+      example: Can Dogs eat Pears
+      name: Question
+      required: true
+  sequence:
+    - service: brave_summarizer.get_brave_answer
+      data:
+        question: "{{question}}"
+        url_encode: false
+      response_variable: brave_response
+      enabled: true
+    - parallel:
+        - service: python_script.set_state
+          data:
+            entity_id: sensor.summary
+            state: "{{brave_response.summary}}"
+        - service: python_script.set_state
+          data:
+            entity_id: sensor.answer_sources
+            state: "{{brave_response.sources}}"
+        - service: python_script.set_state
+          data:
+            entity_id: sensor.question_asked
+            state: "{{brave_response.question}}"
+  mode: single
+  icon: mdi:chat-question
